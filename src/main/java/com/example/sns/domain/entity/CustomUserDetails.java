@@ -14,6 +14,8 @@ public class CustomUserDetails implements UserDetails {
 
     private String username;
     private String password;
+    private String email;
+    private String phone;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -51,8 +53,24 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Builder
-    public CustomUserDetails(String username, String password) {
+    public CustomUserDetails(String username, String password, String email, String phone) {
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public static CustomUserDetails fromEntity(User user) {
+        return CustomUserDetails.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build();
+    }
+
+    public User newEntity(){
+        return User.builder()
+                .username(username)
+                .password(password)
+                .build();
     }
 }

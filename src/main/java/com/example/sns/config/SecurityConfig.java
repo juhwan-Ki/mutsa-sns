@@ -3,6 +3,7 @@ package com.example.sns.config;
 import com.example.sns.jwt.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,6 +30,8 @@ public class SecurityConfig {
                                         "/users/join"
                                 )
                                 .permitAll()
+                                .requestMatchers(HttpMethod.PUT)
+                                .authenticated()
                 )
                 // 토큰을 쓰기 위해서 사용
                 .sessionManagement(
