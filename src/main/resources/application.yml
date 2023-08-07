@@ -24,3 +24,7 @@ spring:
 
 jwt:
   secret: nvmjmaskdkqweiiqtndnfamdfjoasdfugakdnfkandslfadsdfad
+
+default :
+  image :
+    address : "/img/default/default-img.png"
