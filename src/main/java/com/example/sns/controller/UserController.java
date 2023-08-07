@@ -4,6 +4,7 @@ import com.example.sns.domain.dto.JoinDto;
 import com.example.sns.domain.dto.LoginDto;
 import com.example.sns.domain.dto.ResponseDto;
 import com.example.sns.domain.entity.CustomUserDetails;
+import com.example.sns.exception.CommonException;
 import com.example.sns.jwt.JwtResponseDto;
 import com.example.sns.jwt.JwtTokenUtils;
 import com.example.sns.service.UserService;
@@ -14,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.example.sns.exception.ErrorCode.PASSWORD_NOT_MATCH;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,7 +39,7 @@ public class UserController {
                             .phone(joinDto.getPhone())
                             .build());
         } else {
-            throw new PasswordException("비밀번호가 일치하지 않습니다.");
+            throw new CommonException(PASSWORD_NOT_MATCH, PASSWORD_NOT_MATCH.getMessage());
         }
 
         return new ResponseDto("회원가입이 정상적으로 완료되었습니다!");
@@ -48,7 +51,7 @@ public class UserController {
                 = userService.loadUserByUsername(loginDto.getUsername());
 
         if (!passwordEncoder.matches(loginDto.getPassword(), userDetails.getPassword()))
-            throw new PasswordException("비밀번호가 일치하지 않습니다. 다시 입력하세요");
+            throw new CommonException(PASSWORD_NOT_MATCH, PASSWORD_NOT_MATCH.getMessage());
         // 토큰 발급
         JwtResponseDto jwtResponse = new JwtResponseDto();
         jwtResponse.setToken(jwtTokenUtils.generateToken(userDetails));

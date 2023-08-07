@@ -14,6 +14,7 @@ public enum ErrorCode {
     IMAGE_NOT_FOUND(ResultCode.NOT_FOUND, "존재하지 않는 사진입니다."),
     COMMENT_NOT_FOUND(ResultCode.NOT_FOUND, "존재하지 않는 댓글입니다."),
 
+    PASSWORD_NOT_MATCH(ResultCode.FORBIDDEN, "비밀번호가 일치하지 않습니다."),
     FEED_USER_NOT_MATCH(ResultCode.FORBIDDEN, "게시글을 등록한 유저가 아닙니다."),
     COMMENT_USER_NOT_MATCH(ResultCode.FORBIDDEN, "댓글을 등록한 유저가 아닙니다."),
     NOT_LIKE_MY_FEED(ResultCode.FORBIDDEN, "자신의 게시글은 좋아요를 누를 수 없습니다."),
