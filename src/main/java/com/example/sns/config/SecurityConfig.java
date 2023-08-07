@@ -27,11 +27,14 @@ public class SecurityConfig {
                         authHttp -> authHttp
                                 .requestMatchers(
                                         "/users/login",
-                                        "/users/join"
+                                        "/users/join",
+                                        "/img/**"
                                 )
                                 .permitAll()
-                                .requestMatchers(HttpMethod.PUT)
+                                .requestMatchers("/**")
                                 .authenticated()
+                                .requestMatchers(HttpMethod.GET,"/feeds")
+                                .permitAll()
                 )
                 // 토큰을 쓰기 위해서 사용
                 .sessionManagement(
