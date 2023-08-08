@@ -7,9 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
-import static com.example.sns.exception.ErrorCode.RECEIVER_NOT_MATCH;
+import static com.example.sns.exception.ErrorCode.USER_NOT_MATCH;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
@@ -42,7 +40,7 @@ public class Friend {
     // == 비즈니스 로직 ==//
     public void validCheck(User receiver) {
         if (this.receiver != receiver) {
-            throw new CommonException(RECEIVER_NOT_MATCH, RECEIVER_NOT_MATCH.getMessage());
+            throw new CommonException(USER_NOT_MATCH, USER_NOT_MATCH.getMessage());
         }
     }
 
