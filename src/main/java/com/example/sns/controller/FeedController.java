@@ -4,7 +4,6 @@ import com.example.sns.domain.dto.ArticleDto;
 import com.example.sns.domain.dto.ResponseDto;
 import com.example.sns.service.FeedService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,11 +39,11 @@ public class FeedController {
         return feedService.readOne(articleId);
     }
 
-    @PutMapping("/{articleId}")
+    @PutMapping(value = "/{articleId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseDto updateFeed(
             @PathVariable Long articleId,
             @RequestPart(required = false) List<MultipartFile> files,
-            @RequestPart ArticleDto articleDto ) {
+            @RequestPart ArticleDto articleDto) {
         return feedService.updateFeed(articleId,files,articleDto);
     }
 

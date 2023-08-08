@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "update Article SET deleted_at = current_timestamp where article_id = ?")
+@SQLDelete(sql = "update article SET deleted_at = current_timestamp where article_id = ?")
 @Where(clause = "deleted_at is null")
 public class Article {
 
@@ -34,13 +34,13 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleImages> articleImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<LikeArticle> likeArticles = new ArrayList<>();
 
     @Builder

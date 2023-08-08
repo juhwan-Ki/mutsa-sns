@@ -47,7 +47,7 @@ public class FeedService {
     @Transactional
     public ResponseDto createFeed(List<MultipartFile> files, ArticleDto articleDto) {
         // 사용자 정보 가져오기
-        String username = getString();
+        String username = getUserName();
         User findUser =
                 userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
 
@@ -130,7 +130,7 @@ public class FeedService {
     // 피드 단독 조회
     public ArticleDto readOne(Long articleId) {
         // 로그인 확인
-        String username = getString();
+        String username = getUserName();
         User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
 
         Article findFeed = feedRepository.findById(articleId).orElseThrow(() -> new CommonException(FEED_NOT_FOUND, FEED_NOT_FOUND.getMessage()));
@@ -164,7 +164,7 @@ public class FeedService {
     @Transactional
     public ResponseDto updateFeed(Long articleId, List<MultipartFile> files, ArticleDto articleDto) {
         // 사용자 인증
-        String username = getString();
+        String username = getUserName();
         User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
         Article findArticle = feedRepository.findById(articleId).orElseThrow(() -> new CommonException(FEED_NOT_FOUND, FEED_NOT_FOUND.getMessage()));
 
@@ -196,19 +196,18 @@ public class FeedService {
                     throw new CommonException(UPLOAD_ERROR, UPLOAD_ERROR.getMessage());
                 }
 
-                ArticleImages articleImages = ArticleImages.builder()
+                feedImgRepository.save(ArticleImages.builder()
                         .article(findArticle)
                         .imageUrl(path)
-                        .build();
-                feedImgRepository.save(articleImages);
+                        .build());
             }
         }
 
         // 삭제할 이미지가 있으면
-        if(!articleDto.getImgUrls().isEmpty()) {
-            for (ArticleImageDto articleImageDto : articleDto.getImgUrls()) {
+        if(articleDto.getImgUrls() != null) {
+            for (ArticleImageDto image : articleDto.getImgUrls()) {
                 ArticleImages findImg =
-                            feedImgRepository.findById(articleImageDto.getId()).orElseThrow(() -> new CommonException(IMAGE_NOT_FOUND, IMAGE_NOT_FOUND.getMessage()));
+                            feedImgRepository.findById(image.getId()).orElseThrow(() -> new CommonException(IMAGE_NOT_FOUND, IMAGE_NOT_FOUND.getMessage()));
                 try {
                     // 실제 파일 삭제
                     File file = new File(findImg.getImageUrl());
@@ -225,9 +224,11 @@ public class FeedService {
         return new ResponseDto("피드가 수정되었습니다");
     }
 
+    // 피드 삭제
+    // soft delete 적용
     @Transactional
     public ResponseDto deleteFeed(Long articleId) {
-        String username = getString();
+        String username = getUserName();
         User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
         Article findArticle = feedRepository.findById(articleId).orElseThrow(() -> new CommonException(FEED_NOT_FOUND, FEED_NOT_FOUND.getMessage()));
 
@@ -251,7 +252,7 @@ public class FeedService {
 
         // 피드 삭제
         if(findArticle.getId().equals(articleId)) {
-            feedRepository.existsById(articleId);
+            feedRepository.deleteById(articleId);
         } else {
             throw new CommonException(FEED_NOT_FOUND, FEED_NOT_FOUND.getMessage());
         }
@@ -266,7 +267,7 @@ public class FeedService {
         }
     }
 
-    private static String getString() {
+    private static String getUserName() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 

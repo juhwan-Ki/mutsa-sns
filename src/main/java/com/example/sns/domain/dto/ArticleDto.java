@@ -1,7 +1,6 @@
 package com.example.sns.domain.dto;
 
 import com.example.sns.domain.entity.Article;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Builder;
