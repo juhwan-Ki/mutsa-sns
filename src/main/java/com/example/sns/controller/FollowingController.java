@@ -16,14 +16,14 @@ public class FollowingController {
     private final FollowingService followingService;
 
     // 팔로잉
-    @PostMapping
+    @PostMapping("/follow")
     public Response<String> follow(@PathVariable String username, @PathVariable String followerName) {
         followingService.follow(username, followerName);
         return Response.success("팔로잉 되었습니다.");
     }
 
     // 언팔로잉
-    @PostMapping
+    @PostMapping("/un-follow")
     public Response<String> unFollow(@PathVariable String username, @PathVariable String followerName) {
         followingService.unFollow(username, followerName);
         return Response.success("팔로잉이 취소 되었습니다.");

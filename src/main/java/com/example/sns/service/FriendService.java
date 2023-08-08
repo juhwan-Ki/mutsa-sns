@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.sns.domain.entity.FriendStatus.ACCEPT;
 import static com.example.sns.domain.entity.FriendStatus.PENDING;
 import static com.example.sns.exception.ErrorCode.*;
 
@@ -87,9 +88,9 @@ public class FriendService {
         }
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
-        List<Friend> friendShipByUser = friendRepository.findFriendByUser(user);
+        List<Friend> friendByUser = friendRepository.findFriendByUser(user);
 
-        List<User> friends = friendShipByUser.stream()
+        List<User> friends = friendByUser.stream()
                 .map(friend -> friend.getReceiver() == user ? friend.getSender() : friend.getReceiver())
                 .toList();
 
