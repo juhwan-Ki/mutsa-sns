@@ -3,7 +3,7 @@ package com.example.sns.service;
 import com.example.sns.domain.dto.ArticleDto;
 import com.example.sns.domain.dto.ArticleImageDto;
 import com.example.sns.domain.dto.CommentDto;
-import com.example.sns.domain.dto.ResponseDto;
+import com.example.sns.domain.Response;
 import com.example.sns.domain.entity.Article;
 import com.example.sns.domain.entity.ArticleImages;
 import com.example.sns.domain.entity.Comment;
@@ -45,7 +45,7 @@ public class FeedService {
 
     // 피드 등록
     @Transactional
-    public ResponseDto createFeed(List<MultipartFile> files, ArticleDto articleDto) {
+    public ArticleDto createFeed(List<MultipartFile> files, ArticleDto articleDto) {
         // 사용자 정보 가져오기
         String username = getUserName();
         User findUser =
@@ -93,7 +93,7 @@ public class FeedService {
             saveArticle.setDraft(false);
         }
 
-        return new ResponseDto("피드가 등록되었습니다.");
+        return ArticleDto.fromEntity(saveArticle);
     }
 
     // 피드 목록 조회
@@ -162,7 +162,7 @@ public class FeedService {
 
     // 피드 수정
     @Transactional
-    public ResponseDto updateFeed(Long articleId, List<MultipartFile> files, ArticleDto articleDto) {
+    public ArticleDto updateFeed(Long articleId, List<MultipartFile> files, ArticleDto articleDto) {
         // 사용자 인증
         String username = getUserName();
         User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
@@ -221,13 +221,13 @@ public class FeedService {
             }
         }
 
-        return new ResponseDto("피드가 수정되었습니다");
+        return ArticleDto.fromEntity(findArticle);
     }
 
     // 피드 삭제
     // soft delete 적용
     @Transactional
-    public ResponseDto deleteFeed(Long articleId) {
+    public void deleteFeed(Long articleId) {
         String username = getUserName();
         User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
         Article findArticle = feedRepository.findById(articleId).orElseThrow(() -> new CommonException(FEED_NOT_FOUND, FEED_NOT_FOUND.getMessage()));
@@ -256,8 +256,6 @@ public class FeedService {
         } else {
             throw new CommonException(FEED_NOT_FOUND, FEED_NOT_FOUND.getMessage());
         }
-
-        return new ResponseDto("피드가 삭제되었습니다");
     }
 
     private static void validationCheck(User findUser, Article findArticle) {

@@ -1,5 +1,7 @@
 package com.example.sns.service;
 
+import com.example.sns.domain.Response;
+import com.example.sns.domain.dto.UserDto;
 import com.example.sns.domain.entity.CustomUserDetails;
 import com.example.sns.domain.entity.User;
 import com.example.sns.exception.CommonException;
@@ -82,6 +84,14 @@ public class UserService implements UserDetailsManager {
 
     }
 
+    // 유저 정보 확인
+    public UserDto myProfile() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
+
+        return UserDto.fromEntity(findUser);
+    }
+
     @Override
     public void updateUser(UserDetails user) {
 
@@ -103,6 +113,5 @@ public class UserService implements UserDetailsManager {
         log.info("check if user: {} exists", username);
         return this.userRepository.existsByUsername(username);
     }
-
 
 }

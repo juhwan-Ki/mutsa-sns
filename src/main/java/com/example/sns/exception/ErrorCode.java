@@ -13,6 +13,7 @@ public enum ErrorCode {
     FEED_NOT_FOUND(ResultCode.NOT_FOUND, "존재하지 않는 게시글입니다."),
     IMAGE_NOT_FOUND(ResultCode.NOT_FOUND, "존재하지 않는 사진입니다."),
     COMMENT_NOT_FOUND(ResultCode.NOT_FOUND, "존재하지 않는 댓글입니다."),
+    FOLLOWER_NOT_FOUND(ResultCode.NOT_FOUND, "존재하지 않는 팔로워입니다."),
 
     PASSWORD_NOT_MATCH(ResultCode.FORBIDDEN, "비밀번호가 일치하지 않습니다."),
     FEED_USER_NOT_MATCH(ResultCode.FORBIDDEN, "게시글을 등록한 유저가 아닙니다."),

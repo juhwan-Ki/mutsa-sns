@@ -1,11 +1,10 @@
 package com.example.sns.service;
 
-import com.example.sns.domain.dto.ResponseDto;
+import com.example.sns.domain.Response;
 import com.example.sns.domain.entity.Article;
 import com.example.sns.domain.entity.LikeArticle;
 import com.example.sns.domain.entity.User;
 import com.example.sns.exception.CommonException;
-import com.example.sns.exception.ErrorCode;
 import com.example.sns.repository.FeedRepository;
 import com.example.sns.repository.LikeRepository;
 import com.example.sns.repository.UserRepository;
@@ -27,7 +26,7 @@ public class LikeService {
     private final LikeRepository likeRepository;
 
     @Transactional
-    public ResponseDto like(Long articleId) {
+    public void like(Long articleId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
         Article findArticle = feedRepository.findById(articleId).orElseThrow(() -> new CommonException(FEED_NOT_FOUND, FEED_NOT_FOUND.getMessage()));
@@ -50,7 +49,5 @@ public class LikeService {
                             .user(findUser)
                             .build());
         }
-
-        return new ResponseDto("Like~!");
     }
 }

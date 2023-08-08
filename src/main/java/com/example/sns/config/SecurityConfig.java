@@ -31,10 +31,10 @@ public class SecurityConfig {
                                         "/img/**"
                                 )
                                 .permitAll()
-                                .requestMatchers("/**")
-                                .authenticated()
                                 .requestMatchers(HttpMethod.GET,"/feeds")
                                 .permitAll()
+                                .requestMatchers("/**")
+                                .authenticated()
                 )
                 // 토큰을 쓰기 위해서 사용
                 .sessionManagement(

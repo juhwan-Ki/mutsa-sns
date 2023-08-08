@@ -1,8 +1,6 @@
 package com.example.sns.domain.dto;
 
 import com.example.sns.domain.entity.User;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,26 +12,20 @@ public class UserDto {
 
     private Long id;
     private String username;
-    private String password;
-    private String email;
-    private String phone;
+    private String profileImg;
 
     @Builder
-    public UserDto(Long id, String username, String password, String email, String phone) {
+    public UserDto(Long id, String username, String password, String profileImg) {
         this.id = id;
         this.username = username;
-        this.password = password;
-        this.email = email;
-        this.phone = phone;
+        this.profileImg = profileImg;
     }
 
     public static UserDto fromEntity(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
-                .password(user.getPassword())
-                .email(user.getEmail())
-                .phone(user.getPhone())
+                .profileImg(user.getProfileImg())
                 .build();
     }
 }
