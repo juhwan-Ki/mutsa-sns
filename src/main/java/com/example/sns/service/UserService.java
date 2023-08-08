@@ -1,8 +1,11 @@
 package com.example.sns.service;
 
 import com.example.sns.domain.Response;
+import com.example.sns.domain.dto.ArticleDto;
 import com.example.sns.domain.dto.UserDto;
+import com.example.sns.domain.entity.Article;
 import com.example.sns.domain.entity.CustomUserDetails;
+import com.example.sns.domain.entity.Following;
 import com.example.sns.domain.entity.User;
 import com.example.sns.exception.CommonException;
 import com.example.sns.repository.UserRepository;
@@ -18,6 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.sns.exception.ErrorCode.*;
 
@@ -81,7 +87,6 @@ public class UserService implements UserDetailsManager {
 
         // 이미지 url 저장
         findUser.setProfileImg(path);
-
     }
 
     // 유저 정보 확인
@@ -90,6 +95,32 @@ public class UserService implements UserDetailsManager {
         User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
 
         return UserDto.fromEntity(findUser);
+    }
+
+    // 팔로잉한 유저 피드 조회
+    public List<ArticleDto> getFollowingUsersFeed() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User findUser = userRepository.findByUsername(username).orElseThrow(() -> new CommonException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
+
+        // 팔로잉된 유저 조회
+        List<Following> following = findUser.getFollowing();
+
+        // 팔로워의 피드를 피드 id의 역순으로 조회
+        List<Article> feeds = following.stream()
+                .flatMap(followingUser -> followingUser.getFollowing().getArticles().stream())
+                .sorted(Comparator.comparingLong(Article::getId).reversed())
+                .toList();
+
+        return feeds.stream()
+                .map(ArticleDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    // 중복체크 메소드
+    @Override
+    public boolean userExists(String username) {
+        log.info("check if user: {} exists", username);
+        return this.userRepository.existsByUsername(username);
     }
 
     @Override
@@ -105,13 +136,6 @@ public class UserService implements UserDetailsManager {
     @Override
     public void changePassword(String oldPassword, String newPassword) {
 
-    }
-
-    // 중복체크 메소드
-    @Override
-    public boolean userExists(String username) {
-        log.info("check if user: {} exists", username);
-        return this.userRepository.existsByUsername(username);
     }
 
 }

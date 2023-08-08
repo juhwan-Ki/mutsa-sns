@@ -1,5 +1,6 @@
 package com.example.sns.controller;
 
+import com.example.sns.domain.dto.ArticleDto;
 import com.example.sns.domain.dto.JoinDto;
 import com.example.sns.domain.dto.LoginDto;
 import com.example.sns.domain.Response;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.example.sns.exception.ErrorCode.PASSWORD_NOT_MATCH;
 
@@ -74,4 +77,11 @@ public class UserController {
     public Response<UserDto> myProfile() {
         return Response.success(userService.myProfile());
     }
+
+    // 팔로우한 유저의 필드 조회
+    @GetMapping("/following/feed")
+    public Response<List<ArticleDto>> getFollowingPosts() {
+        return Response.success(userService.getFollowingUsersFeed());
+    }
+
 }
